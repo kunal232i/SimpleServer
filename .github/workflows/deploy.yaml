@@ -20,11 +20,14 @@ jobs:
           sudo apt-get install -y npm
           npm install -g pm2
 
+      - name: Change to Project Directory
+        run: cd SimpleServer
+
       - name: Install Dependencies
         run: npm install
 
       - name: Deploy to Server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@main
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
