@@ -1,11 +1,11 @@
-express = require("express");
-app = express();
-const PORT = 80;
+const express = require("express");
+const app = express();
+const port = 80;
 
-app.get("/sayHello", function (req, res) {
+app.get("/sayHello", (req, res) => {
   res.json({ message: "Hello User" });
 });
 
-app.listen(PORT.gitignoreT, function () {
-  console.log(`Server started on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
