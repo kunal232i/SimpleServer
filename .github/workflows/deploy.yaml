@@ -31,7 +31,7 @@ jobs:
         run: npm install
 
       - name: Display Directory Contents
-        run: ls -la
+        run: ls -la $GITHUB_WORKSPACE
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
