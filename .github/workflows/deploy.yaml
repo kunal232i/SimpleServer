@@ -20,6 +20,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y nodejs npm
           sudo npm install -g pm2
+          export PATH=$PATH:/usr/bin/npm:/usr/bin
 
       - name: Display Node.js and NPM Versions
         run: |
