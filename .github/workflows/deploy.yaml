@@ -34,12 +34,12 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y nodejs npm
             node -v
-            sudo chmod 777 test
             cd test/
             git pull origin main
             npm install
             sudo npm install -g pm2
-            pm2 restart app.js
+            pm2 kill
+            pm2 start app.js
 
       - name: Notify Deployment Status
         if: success()
