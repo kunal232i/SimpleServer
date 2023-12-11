@@ -11,20 +11,16 @@ This project is a simple Node.js server that responds with a JSON message when a
 - `package.json`: Package configuration file with dependencies and scripts.
 - `.gitignore`: File specifying patterns for files and directories to be ignored by version control.
 
-## Deployment Workflow
+## Deploy Workflow
 
-The deployment workflow is triggered on each push to the `main` branch. It performs the following steps:
+The deployment workflow is defined in `.github/workflows/deploy.yml`. It triggers on each push to the main branch. The workflow performs the following steps:
 
-1. **Checkout Repository:** Checks out the latest code from the repository.
-2. **Set Up Node.js:** Configures the GitHub Actions runner environment with Node.js.
-3. **Install Dependencies:** Uses npm to install project dependencies.
-4. **Deploy to Server:** Utilizes the `appleboy/ssh-action` to connect to the specified server and perform deployment tasks.
-   - Pulls the latest changes from the `main` branch.
-   - Installs the Express library.
-   - Installs pm2 globally and restarts the `app.js` application.
-5. **Notify Deployment Status:** Echoes a success message when the deployment is successful.
-6. **Notify Deployment Failure:** Echoes a failure message and exits with an error code if the deployment fails.
+1. **Checkout Repository**: Checks out the main branch of the repository using the `actions/checkout` action.
 
-## Additional Notes
+2. **Copy Files to VM**: Uses the `appleboy/scp-action` to copy the repository files to a specified directory (`test/`) on a remote VM. The VM connection details are stored as secrets in the GitHub repository.
 
-- Ensure that sensitive information such as server host, username, and private key are stored as secrets in the GitHub repository.
+3. **SSH into VM and Deploy**: Utilizes the `appleboy/ssh-action` to SSH into the remote VM and deploy the server. This involves updating packages, pulling the latest code, installing dependencies, and restarting the server using `pm2`.
+
+4. **Notify Deployment Status**: If the deployment is successful, it echoes "Deployment successful!"
+
+5. **Notify Deployment Failure**: If the deployment fails, it echoes "Deployment failed!" and exits with an error.
