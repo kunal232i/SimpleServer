@@ -32,12 +32,31 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             sudo apt-get update
-            sudo apt-get install -y nodejs npm
+            sudo apt-get install -y nodejs npm nginx
             node -v
             cd test/
             git pull origin main
             npm install
             sudo npm install -g pm2
+            echo 'server {
+                listen 80;
+                server_name 20.2.74.69;
+
+                location / {
+                    proxy_pass http://127.0.0.1:3000;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                    proxy_set_header Host $host;
+                    proxy_cache_bypass $http_upgrade;
+                }
+            }' | sudo tee /etc/nginx/sites-available/myapp > /dev/null
+
+
+            sudo rm /etc/nginx/sites-enabled/myapp
+            sudo ln -s /etc/nginx/sites-available/myapp /etc/nginx/sites-enabled
+            sudo nginx -t
+            sudo nginx -s reload
             pm2 kill
             pm2 start app.js
 
