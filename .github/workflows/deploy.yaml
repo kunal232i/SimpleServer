@@ -24,16 +24,6 @@ jobs:
           source: .
           target: test/
 
-      - name: Install Node.js and npm
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y nodejs npm
-
-      - name: Debug
-        run: |
-          node -v
-          npm -v
-
       - name: SSH into VM and Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -41,6 +31,9 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            sudo apt-get update
+            sudo apt-get install -y nodejs npm
+            node -v
             cd test/
             git pull origin main
             npm install
