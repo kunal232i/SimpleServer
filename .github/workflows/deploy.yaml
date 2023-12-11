@@ -15,35 +15,17 @@ jobs:
         with:
           ref: main
 
-      - name: Set Up Node.js and PM2
+      - name: Copy Files to VM
         run: |
-          sudo apt-get update
-          sudo apt-get install -y nodejs npm
-          sudo npm install -g pm2
-          export PATH=$PATH:/usr/bin/npm:/usr/bin
+          scp -i ${{ secrets.SSH_PRIVATE_KEY }} -r ./* ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }}:$GITHUB_WORKSPACE/
 
-      - name: Display Node.js and NPM Versions
+      - name: SSH into VM and Run Commands
         run: |
-          node --version
-          npm --version
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Display Directory Contents
-        run: ls -la $GITHUB_WORKSPACE
-
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd $GITHUB_WORKSPACE
-            git pull origin main
-            npm install
-            pm2 restart app.js
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} "cd $GITHUB_WORKSPACE && \
+            git pull origin main && \
+            npm install && \
+            npm install -g pm2 && \
+            pm2 restart app.js"
 
       - name: Notify Deployment Status
         if: success()
