@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Copy Files to VM
-        uses: appleboy/scp-action@0.1.1
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
@@ -20,7 +20,7 @@ jobs:
           target: test/
 
       - name: SSH into VM and Deploy
-        uses: appleboy/ssh-action@0.1.5
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VM_HOST }}
           username: ${{ secrets.VM_USERNAME }}
